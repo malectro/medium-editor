@@ -1,8 +1,9 @@
+/*global Util, DefaultButton, Selection */
+
 var FontSizeExtension;
+
 (function () {
     'use strict';
-
-    /*global Util, DefaultButton, Selection */
 
     function FontSizeDerived () {
         this.parent = true;

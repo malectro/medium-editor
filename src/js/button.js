@@ -1,4 +1,5 @@
 var DefaultButton;
+
 (function () {
     'use strict';
 

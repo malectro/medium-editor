@@ -1,8 +1,9 @@
+/*global Util, Selection, DefaultButton */
+
 var AnchorExtension;
+
 (function () {
     'use strict';
-
-    /*global Util, Selection, DefaultButton */
 
     function AnchorDerived() {
         this.parent = true;

@@ -1,8 +1,8 @@
+/*global PasteHandler, AnchorForm, FontSizeForm */
+
 var extensionDefaults;
 (function () {
     'use strict';
-
-    /*global PasteHandler, AnchorForm, FontSizeForm */
 
     extensionDefaults = {
         paste: PasteHandler,

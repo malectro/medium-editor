@@ -399,10 +399,9 @@ if (!("classList" in document.createElement("_"))) {
     'use strict';
 
 var Util;
+
 (function (window) {
     'use strict';
-
-    /*global NodeFilter, console*/
 
     // Params: Array, Boolean, Object
     function getProp (parts, create, context) {
@@ -1151,10 +1150,9 @@ var editorDefaults;
 })();
 
 var Extension;
+
 (function () {
     'use strict';
-
-    /* global Util */
 
     Extension = function (options) {
         Util.extend(this, options);
@@ -1340,10 +1338,9 @@ var Extension;
 })();
 
 var Selection;
+
 (function () {
     'use strict';
-
-    /*global Util */
 
     Selection = {
         findMatchingSelectionParent: function (testElementFunction, contentWindow) {
@@ -1481,10 +1478,9 @@ var Selection;
 }());
 
 var Events;
+
 (function () {
     'use strict';
-
-    /*global Util */
 
     Events = function (instance) {
         this.base = instance;
@@ -1951,6 +1947,7 @@ var ButtonExtension;
 }());
 
 var DefaultButton;
+
 (function () {
     'use strict';
 
@@ -2081,12 +2078,11 @@ var DefaultButton;
         }
     };
 }());
+
 var PasteHandler;
+
 (function () {
     'use strict';
-
-    /*global Util, Selection, Extension */
-
     /*jslint regexp: true*/
     /*
         jslint does not allow character negation, because the negation
@@ -2434,10 +2430,9 @@ var FormExtension;
 
 })();
 var AnchorExtension;
+
 (function () {
     'use strict';
-
-    /*global Util, Selection, DefaultButton */
 
     function AnchorDerived() {
         this.parent = true;
@@ -2688,6 +2683,7 @@ var AnchorExtension;
     AnchorExtension = Util.derives(DefaultButton, AnchorDerived);
 
 }());
+
 var AnchorForm;
 (function () {
     'use strict';
@@ -2929,10 +2925,9 @@ var AnchorForm;
 }());
 
 var AnchorPreview;
+
 (function () {
     'use strict';
-
-    /*global Util*/
 
     AnchorPreview = function () {
         this.parent = true;
@@ -3165,10 +3160,9 @@ var AnchorPreview;
 }());
 
 var FontSizeExtension;
+
 (function () {
     'use strict';
-
-    /*global Util, DefaultButton, Selection */
 
     function FontSizeDerived () {
         this.parent = true;
@@ -3350,6 +3344,7 @@ var FontSizeExtension;
 
     FontSizeExtension = Util.derives(DefaultButton, FontSizeDerived);
 }());
+
 var FontSizeForm;
 (function () {
     'use strict';
@@ -3527,10 +3522,9 @@ var FontSizeForm;
 }());
 
 var Toolbar;
+
 (function () {
     'use strict';
-
-    /*global Util, Selection */
 
     Toolbar = function Toolbar(instance) {
         this.base = instance;
@@ -4069,6 +4063,7 @@ var Toolbar;
 }());
 
 var Placeholders;
+
 (function () {
     'use strict';
 
@@ -4143,8 +4138,6 @@ var Placeholders;
 var extensionDefaults;
 (function () {
     'use strict';
-
-    /*global PasteHandler, AnchorForm, FontSizeForm */
 
     extensionDefaults = {
         paste: PasteHandler,
