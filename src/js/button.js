@@ -1,9 +1,8 @@
-/*global Extension */
-
 var Button;
-
 (function () {
     'use strict';
+
+    /*global Extension */
 
     Button = Extension.extend({
 

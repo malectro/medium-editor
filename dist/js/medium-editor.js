@@ -399,9 +399,10 @@ if (!("classList" in document.createElement("_"))) {
     'use strict';
 
 var Util;
-
 (function (window) {
     'use strict';
+
+    /*global NodeFilter, console*/
 
     // Params: Array, Boolean, Object
     function getProp (parts, create, context) {
@@ -1150,8 +1151,11 @@ var editorDefaults;
 })();
 
 var Extension;
-
 (function () {
+    'use strict';
+
+    /* global Util */
+
     Extension = function (options) {
         Util.extend(this, options);
     };
@@ -1336,9 +1340,10 @@ var Extension;
 })();
 
 var Selection;
-
 (function () {
     'use strict';
+
+    /*global Util */
 
     Selection = {
         findMatchingSelectionParent: function (testElementFunction, contentWindow) {
@@ -1476,9 +1481,10 @@ var Selection;
 }());
 
 var Events;
-
 (function () {
     'use strict';
+
+    /*global Util */
 
     Events = function (instance) {
         this.base = instance;
@@ -1810,9 +1816,10 @@ var Events;
 }());
 
 var Button;
-
 (function () {
     'use strict';
+
+    /*global Extension */
 
     Button = Extension.extend({
 
@@ -1944,9 +1951,11 @@ var Button;
 }());
 
 var PasteHandler;
-
 (function () {
     'use strict';
+
+    /*global Util, Selection, Extension */
+
     /*jslint regexp: true*/
     /*
         jslint does not allow character negation, because the negation
@@ -2299,20 +2308,6 @@ var AnchorExtension;
 
     /*global Util, Selection, FormExtension */
 
-    /*function AnchorDerived() {
-        this.parent = true;
-        this.options = {
-            name: 'anchor',
-            action: 'createLink',
-            aria: 'link',
-            tagNames: ['a'],
-            contentDefault: '<b>#</b>',
-            contentFA: '<i class="fa fa-link"></i>'
-        };
-        this.name = 'anchor';
-        this.hasForm = true;
-    }*/
-
     AnchorExtension = FormExtension.extend({
 
         name: 'anchor',
@@ -2548,9 +2543,10 @@ var AnchorExtension;
 }());
 
 var AnchorPreview;
-
 (function () {
     'use strict';
+
+    /*global Util*/
 
     AnchorPreview = function () {
         this.parent = true;
@@ -2783,24 +2779,11 @@ var AnchorPreview;
 }());
 
 var FontSizeExtension;
-
 (function () {
     'use strict';
 
-    /*function FontSizeDerived () {
-        this.parent = true;
-        this.options = {
-            name: 'fontsize',
-            action: 'fontSize',
-            aria: 'increase/decrease font size',
-            contentDefault: '&#xB1;', // ±
-            contentFA: '<i class="fa fa-text-height"></i>'
-        };
-        this.name = 'fontsize';
-        this.hasForm = true;
-    }
+    /*global FormExtension, Selection */
 
-    FontSizeDerived.prototype = {*/
     FontSizeExtension = FormExtension.extend({
 
         name: 'fontsize',
@@ -2972,9 +2955,10 @@ var FontSizeExtension;
 }());
 
 var Toolbar;
-
 (function () {
     'use strict';
+
+    /*global Util, Selection */
 
     Toolbar = function Toolbar(instance) {
         this.base = instance;
@@ -3513,7 +3497,6 @@ var Toolbar;
 }());
 
 var Placeholders;
-
 (function () {
     'use strict';
 
