@@ -2,27 +2,18 @@ var FontSizeExtension;
 (function () {
     'use strict';
 
-    /*global Util, DefaultButton, Selection */
+    /*global FormExtension, Selection */
 
-    function FontSizeDerived () {
-        this.parent = true;
-        this.options = {
-            name: 'fontsize',
-            action: 'fontSize',
-            aria: 'increase/decrease font size',
-            contentDefault: '&#xB1;', // ±
-            contentFA: '<i class="fa fa-text-height"></i>'
-        };
-        this.name = 'fontsize';
-        this.hasForm = true;
-    }
+    FontSizeExtension = FormExtension.extend({
 
-    FontSizeDerived.prototype = {
-
-        // Button and Extension handling
+        name: 'fontsize',
+        action: 'fontSize',
+        aria: 'increase/decrease font size',
+        contentDefault: '&#xB1;', // ±
+        contentFA: '<i class="fa fa-text-height"></i>',
 
         // Called when the button the toolbar is clicked
-        // Overrides DefaultButton.handleClick
+        // Overrides ButtonExtension.handleClick
         handleClick: function (evt) {
             evt.preventDefault();
             evt.stopPropagation();
@@ -180,7 +171,5 @@ var FontSizeExtension;
             event.preventDefault();
             this.doFormCancel();
         }
-    };
-
-    FontSizeExtension = Util.derives(DefaultButton, FontSizeDerived);
+    });
 }());

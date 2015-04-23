@@ -1,4 +1,4 @@
-/*global FileReader, Util, ButtonsData, Button,
+/*global FileReader, Util, ButtonsData, ButtonExtension, DefaultButton,
  Selection, AnchorExtension, FontSizeExtension, Extension, extensionDefaults,
  Toolbar, AnchorPreview, Events, Placeholders, editorDefaults */
 
@@ -390,7 +390,7 @@ function MediumEditor(elements, options) {
                 ext = initExtension(new FontSizeExtension(), buttonName, this);
                 this.commands.push(ext);
             } else if (ButtonsData.hasOwnProperty(buttonName)) {
-                ext = initExtension(new Button(ButtonsData[buttonName]), buttonName, this);
+                ext = initExtension(new ButtonExtension(ButtonsData[buttonName]), buttonName, this);
                 this.commands.push(ext);
             }
         }, this);
@@ -469,7 +469,7 @@ function MediumEditor(elements, options) {
     // deprecate
     MediumEditor.statics = {
         ButtonsData: ButtonsData,
-        DefaultButton: Button,
+        DefaultButton: DefaultButton,
         AnchorExtension: AnchorExtension,
         FontSizeExtension: FontSizeExtension,
         Toolbar: Toolbar,

@@ -2,14 +2,14 @@ var FormExtension;
 (function () {
     'use strict';
 
-    /* global Button */
+    /* global ButtonExtension */
 
     var noop = function () {};
 
     /* Base functionality for an extension whcih will display
      * a 'form' inside the toolbar
      */
-    FormExtension = Button.extend({
+    FormExtension = ButtonExtension.extend({
 
         // default labels for the anchor-edit form buttons
         formSaveLabel: '&#10003;',
