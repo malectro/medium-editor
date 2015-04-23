@@ -1,11 +1,10 @@
-/*global Util, Selection, DefaultButton */
-
 var AnchorExtension;
-
 (function () {
     'use strict';
 
-    function AnchorDerived() {
+    /*global Util, Selection, FormExtension */
+
+    /*function AnchorDerived() {
         this.parent = true;
         this.options = {
             name: 'anchor',
@@ -17,18 +16,19 @@ var AnchorExtension;
         };
         this.name = 'anchor';
         this.hasForm = true;
-    }
+    }*/
 
-    AnchorDerived.prototype = {
+    AnchorExtension = FormExtension.extend({
 
-        // Button and Extension handling
-
-        // labels for the anchor-edit form buttons
-        formSaveLabel: '&#10003;',
-        formCloseLabel: '&times;',
+        name: 'anchor',
+        action: 'createLink',
+        aria: 'link',
+        tagNames: ['a'],
+        contentDefault: '<b>#</b>',
+        contentFA: '<i class="fa fa-link"></i>',
 
         // Called when the button the toolbar is clicked
-        // Overrides DefaultButton.handleClick
+        // Overrides Button.handleClick
         handleClick: function (evt) {
             evt.preventDefault();
             evt.stopPropagation();
@@ -249,8 +249,5 @@ var AnchorExtension;
             event.preventDefault();
             this.doFormCancel();
         }
-    };
-
-    AnchorExtension = Util.derives(DefaultButton, AnchorDerived);
-
+    });
 }());

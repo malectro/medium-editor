@@ -1226,11 +1226,13 @@ var Extension;
 
         /* parent: [boolean]
          *
-         * setting this to true will set the .base property
-         * of the extension to be a reference to the
-         * medium-editor instance that is using the extension
+         * Setting this to false will prevent MediumEditor
+         * from setting the .base property.
+         * If left as true, the .base property of the extension
+         * will be assigned a reference to the
+         * MediumEditor instance that is using the extension
          */
-        parent: false,
+        parent: true,
 
         /* base: [MediumEditor instance]
          *
@@ -1261,15 +1263,6 @@ var Extension;
          */
         checkState: null,
 
-        /* getButton: [function ()]
-         *
-         * If implemented, this function will be called when
-         * the toolbar is being created.  The DOM Element returned
-         * by this function will be appended to the toolbar along
-         * with any other buttons.
-         */
-        getButton: null,
-
         /* As alternatives to checkState, these functions provide a more structured
          * path to updating the state of an extension (usually a button) whenever
          * the state of the editor & toolbar are updated.
@@ -1280,7 +1273,7 @@ var Extension;
          * If implemented, this function will be called once on each extension
          * when the state of the editor/toolbar is being updated.
          *
-         * If this function returns a non-null value, the exntesion will
+         * If this function returns a non-null value, the extension will
          * be ignored as the code climbs the dom tree.
          *
          * If this function returns true, and the setActive() function is defined
@@ -1816,42 +1809,43 @@ var Events;
 
 }());
 
-var DefaultButton;
+var Button;
 
 (function () {
     'use strict';
 
-    DefaultButton = function (options, instance) {
-        this.options = options;
-        this.name = options.name;
-        this.init(instance);
-    };
+    Button = Extension.extend({
 
-    DefaultButton.prototype = {
-        init: function (instance) {
-            this.base = instance;
-
+        init: function () {
             this.button = this.createButton();
             this.base.on(this.button, 'click', this.handleClick.bind(this));
-            if (this.options.key) {
+            if (this.key) {
                 this.base.subscribe('editableKeydown', this.handleKeydown.bind(this));
             }
         },
+
+        /* getButton: [function ()]
+         *
+         * If implemented, this function will be called when
+         * the toolbar is being created.  The DOM Element returned
+         * by this function will be appended to the toolbar along
+         * with any other buttons.
+         */
         getButton: function () {
             return this.button;
         },
         getAction: function () {
-            return (typeof this.options.action === 'function') ? this.options.action(this.base.options) : this.options.action;
+            return (typeof this.action === 'function') ? this.action(this.base.options) : this.action;
         },
         getAria: function () {
-            return (typeof this.options.aria === 'function') ? this.options.aria(this.base.options) : this.options.aria;
+            return (typeof this.aria === 'function') ? this.aria(this.base.options) : this.aria;
         },
         getTagNames: function () {
-            return (typeof this.options.tagNames === 'function') ? this.options.tagNames(this.base.options) : this.options.tagNames;
+            return (typeof this.tagNames === 'function') ? this.tagNames(this.base.options) : this.tagNames;
         },
         createButton: function () {
             var button = this.base.options.ownerDocument.createElement('button'),
-                content = this.options.contentDefault,
+                content = this.contentDefault,
                 ariaLabel = this.getAria();
             button.classList.add('medium-editor-action');
             button.classList.add('medium-editor-action-' + this.name);
@@ -1861,10 +1855,10 @@ var DefaultButton;
                 button.setAttribute('aria-label', ariaLabel);
             }
             if (this.base.options.buttonLabels) {
-                if (this.base.options.buttonLabels === 'fontawesome' && this.options.contentFA) {
-                    content = this.options.contentFA;
+                if (this.base.options.buttonLabels === 'fontawesome' && this.contentFA) {
+                    content = this.contentFA;
                 } else if (typeof this.base.options.buttonLabels === 'object' && this.base.options.buttonLabels[this.name]) {
-                    content = this.base.options.buttonLabels[this.options.name];
+                    content = this.base.options.buttonLabels[this.name];
                 }
             }
             button.innerHTML = content;
@@ -1875,7 +1869,7 @@ var DefaultButton;
 
             if (evt.ctrlKey || evt.metaKey) {
                 key = String.fromCharCode(evt.which || evt.keyCode).toLowerCase();
-                if (this.options.key === key) {
+                if (this.key === key) {
                     evt.preventDefault();
                     evt.stopPropagation();
 
@@ -1909,7 +1903,7 @@ var DefaultButton;
         },
         queryCommandState: function () {
             var queryState = null;
-            if (this.options.useQueryState) {
+            if (this.useQueryState) {
                 queryState = this.base.queryCommandState(this.getAction());
             }
             return queryState;
@@ -1928,16 +1922,16 @@ var DefaultButton;
                 isMatch = tagNames.indexOf(node.tagName.toLowerCase()) !== -1;
             }
 
-            if (!isMatch && this.options.style) {
-                styleVals = this.options.style.value.split('|');
-                computedStyle = this.base.options.contentWindow.getComputedStyle(node, null).getPropertyValue(this.options.style.prop);
+            if (!isMatch && this.style) {
+                styleVals = this.style.value.split('|');
+                computedStyle = this.base.options.contentWindow.getComputedStyle(node, null).getPropertyValue(this.style.prop);
                 styleVals.forEach(function (val) {
                     if (!this.knownState) {
                         isMatch = (computedStyle.indexOf(val) !== -1);
                         // text-decoration is not inherited by default
                         // so if the computed style for text-decoration doesn't match
                         // don't write to knownState so we can fallback to other checks
-                        if (isMatch || this.options.style.prop !== 'text-decoration') {
+                        if (isMatch || this.style.prop !== 'text-decoration') {
                             this.knownState = isMatch;
                         }
                     }
@@ -1946,7 +1940,7 @@ var DefaultButton;
 
             return isMatch;
         }
-    };
+    });
 }());
 
 var PasteHandler;
@@ -2249,12 +2243,63 @@ var PasteHandler;
 
 }());
 
-var AnchorExtension;
-
+var FormExtension;
 (function () {
     'use strict';
 
-    function AnchorDerived() {
+    /* global Button */
+
+    var noop = function () {};
+
+    /* Base functionality for an extension whcih will display
+     * a 'form' inside the toolbar
+     */
+    FormExtension = Button.extend({
+
+        // default labels for the anchor-edit form buttons
+        formSaveLabel: '&#10003;',
+        formCloseLabel: '&times;',
+
+        /* hasForm: [boolean]
+         *
+         * Setting this to true will cause getForm() to be called
+         * when the toolbar is created, so the form can be appended
+         * inside the toolbar container
+         */
+        hasForm: true,
+
+        /* getForm: [function ()]
+         *
+         * When hasForm is true, this function must be implemented
+         * and return a DOM Element which will be appended to
+         * the toolbar container. The form should start hidden, and
+         * the extension can choose when to hide/show it
+         */
+        getForm: noop,
+
+        /* isDisplayed: [function ()]
+         *
+         * This function should return true/false reflecting
+         * whether the form is currently displayed
+         */
+        isDisplayed: noop,
+
+        /* hideForm: [function ()]
+         *
+         * This function should hide the form element inside
+         * the toolbar container
+         */
+        hideForm: noop
+    });
+
+})();
+var AnchorExtension;
+(function () {
+    'use strict';
+
+    /*global Util, Selection, FormExtension */
+
+    /*function AnchorDerived() {
         this.parent = true;
         this.options = {
             name: 'anchor',
@@ -2266,18 +2311,19 @@ var AnchorExtension;
         };
         this.name = 'anchor';
         this.hasForm = true;
-    }
+    }*/
 
-    AnchorDerived.prototype = {
+    AnchorExtension = FormExtension.extend({
 
-        // Button and Extension handling
-
-        // labels for the anchor-edit form buttons
-        formSaveLabel: '&#10003;',
-        formCloseLabel: '&times;',
+        name: 'anchor',
+        action: 'createLink',
+        aria: 'link',
+        tagNames: ['a'],
+        contentDefault: '<b>#</b>',
+        contentFA: '<i class="fa fa-link"></i>',
 
         // Called when the button the toolbar is clicked
-        // Overrides DefaultButton.handleClick
+        // Overrides Button.handleClick
         handleClick: function (evt) {
             evt.preventDefault();
             evt.stopPropagation();
@@ -2498,10 +2544,7 @@ var AnchorExtension;
             event.preventDefault();
             this.doFormCancel();
         }
-    };
-
-    AnchorExtension = Util.derives(DefaultButton, AnchorDerived);
-
+    });
 }());
 
 var AnchorPreview;
@@ -2744,7 +2787,7 @@ var FontSizeExtension;
 (function () {
     'use strict';
 
-    function FontSizeDerived () {
+    /*function FontSizeDerived () {
         this.parent = true;
         this.options = {
             name: 'fontsize',
@@ -2757,12 +2800,17 @@ var FontSizeExtension;
         this.hasForm = true;
     }
 
-    FontSizeDerived.prototype = {
+    FontSizeDerived.prototype = {*/
+    FontSizeExtension = FormExtension.extend({
 
-        // Button and Extension handling
+        name: 'fontsize',
+        action: 'fontSize',
+        aria: 'increase/decrease font size',
+        contentDefault: '&#xB1;', // ±
+        contentFA: '<i class="fa fa-text-height"></i>',
 
         // Called when the button the toolbar is clicked
-        // Overrides DefaultButton.handleClick
+        // Overrides Button.handleClick
         handleClick: function (evt) {
             evt.preventDefault();
             evt.stopPropagation();
@@ -2920,9 +2968,7 @@ var FontSizeExtension;
             event.preventDefault();
             this.doFormCancel();
         }
-    };
-
-    FontSizeExtension = Util.derives(DefaultButton, FontSizeDerived);
+    });
 }());
 
 var Toolbar;
@@ -3936,7 +3982,7 @@ function MediumEditor(elements, options) {
                 ext = initExtension(new FontSizeExtension(), buttonName, this);
                 this.commands.push(ext);
             } else if (ButtonsData.hasOwnProperty(buttonName)) {
-                ext = new DefaultButton(ButtonsData[buttonName], this);
+                ext = initExtension(new Button(ButtonsData[buttonName]), buttonName, this);
                 this.commands.push(ext);
             }
         }, this);
@@ -4015,7 +4061,7 @@ function MediumEditor(elements, options) {
     // deprecate
     MediumEditor.statics = {
         ButtonsData: ButtonsData,
-        DefaultButton: DefaultButton,
+        DefaultButton: Button,
         AnchorExtension: AnchorExtension,
         FontSizeExtension: FontSizeExtension,
         Toolbar: Toolbar,
