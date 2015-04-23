@@ -1,5 +1,6 @@
 /*global MediumEditor, describe, it,  expect, spyOn,
-    afterEach, beforeEach, jasmine, fireEvent, tearDown */
+    afterEach, beforeEach, jasmine, fireEvent, tearDown,
+    AnchorForm */
 
 describe('Anchor Preview TestCase', function () {
     'use strict';
@@ -44,7 +45,7 @@ describe('Anchor Preview TestCase', function () {
             expect(anchorPreview.getPreviewElement().querySelector('a').innerHTML).toBe(document.getElementById('test-link').attributes.href.value);
 
             // load into editor
-            spyOn(MediumEditor.statics.AnchorExtension.prototype, 'showForm').and.callThrough();
+            spyOn(AnchorForm.prototype, 'showForm').and.callThrough();
             fireEvent(anchorPreview.getPreviewElement(), 'click');
             jasmine.clock().tick(300);
             expect(editor.getExtensionByName('anchor').showForm).toHaveBeenCalled();

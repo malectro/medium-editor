@@ -1,10 +1,10 @@
-var AnchorExtension;
+var AnchorForm;
 (function () {
     'use strict';
 
     /*global Util, Selection, FormExtension */
 
-    AnchorExtension = FormExtension.extend({
+    AnchorForm = FormExtension.extend({
 
         name: 'anchor',
         action: 'createLink',

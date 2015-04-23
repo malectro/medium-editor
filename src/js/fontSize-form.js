@@ -1,10 +1,10 @@
-var FontSizeExtension;
+var FontSizeForm;
 (function () {
     'use strict';
 
     /*global FormExtension, Selection */
 
-    FontSizeExtension = FormExtension.extend({
+    FontSizeForm = FormExtension.extend({
 
         name: 'fontsize',
         action: 'fontSize',

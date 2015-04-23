@@ -2688,13 +2688,13 @@ var AnchorExtension;
     AnchorExtension = Util.derives(DefaultButton, AnchorDerived);
 
 }());
-var AnchorExtension;
+var AnchorForm;
 (function () {
     'use strict';
 
     /*global Util, Selection, FormExtension */
 
-    AnchorExtension = FormExtension.extend({
+    AnchorForm = FormExtension.extend({
 
         name: 'anchor',
         action: 'createLink',
@@ -3350,13 +3350,13 @@ var FontSizeExtension;
 
     FontSizeExtension = Util.derives(DefaultButton, FontSizeDerived);
 }());
-var FontSizeExtension;
+var FontSizeForm;
 (function () {
     'use strict';
 
     /*global FormExtension, Selection */
 
-    FontSizeExtension = FormExtension.extend({
+    FontSizeForm = FormExtension.extend({
 
         name: 'fontsize',
         action: 'fontSize',
@@ -4142,10 +4142,14 @@ var Placeholders;
 
 var extensionDefaults;
 (function () {
-    // for now this is empty because nothing interally uses an Extension default.
-    // as they are converted, provide them here.
+    'use strict';
+
+    /*global PasteHandler, AnchorForm, FontSizeForm */
+
     extensionDefaults = {
-        paste: PasteHandler
+        paste: PasteHandler,
+        anchorForm: AnchorForm,
+        fontsizeForm: FontSizeForm
     };
 })();
 
@@ -4531,10 +4535,10 @@ function MediumEditor(elements, options) {
                 ext = initExtension(extensions[buttonName], buttonName, this);
                 this.commands.push(ext);
             } else if (buttonName === 'anchor') {
-                ext = initExtension(new AnchorExtension(), buttonName, this);
+                ext = initExtension(new MediumEditor.extensions.anchorForm(), buttonName, this);
                 this.commands.push(ext);
             } else if (buttonName === 'fontsize') {
-                ext = initExtension(new FontSizeExtension(), buttonName, this);
+                ext = initExtension(new MediumEditor.extensions.fontsizeForm(), buttonName, this);
                 this.commands.push(ext);
             } else if (ButtonsData.hasOwnProperty(buttonName)) {
                 ext = initExtension(new ButtonExtension(ButtonsData[buttonName]), buttonName, this);
