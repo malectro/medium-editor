@@ -122,7 +122,7 @@ var Toolbar;
             this.base.subscribe('editableKeyup', this.handleEditableKeyup.bind(this));
 
             // Handle mouseup on document for updating the selection in the toolbar
-            this.base.on(this.options.ownerDocument.documentElement, 'mouseup', this.handleDocumentMouseup.bind(this));
+            // this.base.on(this.options.ownerDocument.documentElement, 'mouseup', this.handleDocumentMouseup.bind(this));
 
             // Add a scroll event for sticky toolbar
             if (this.options.staticToolbar && this.options.stickyToolbar) {
